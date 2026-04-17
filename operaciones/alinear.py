@@ -43,7 +43,7 @@ class superaliniar(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         # Todo: Solo activar con clip de video
-        if len(bpy.context.selected_sequences) > 0:
+        if len(context.selected_sequences) > 0:
             ClipActual = context.selected_sequences[0]
             if ClipActual.type != "MOVIE" and ClipActual.type != "IMAGE":
                 return False
@@ -52,7 +52,7 @@ class superaliniar(bpy.types.Operator):
 
     def execute(self, context):
 
-        if len(bpy.context.selected_sequences) > 0:
+        if len(context.selected_sequences) > 0:
             ClipActual = context.selected_sequences[0]
             if ClipActual.type != "MOVIE" and ClipActual.type != "IMAGE":
                 return{'FINISHED'}
@@ -67,7 +67,10 @@ class superaliniar(bpy.types.Operator):
             if self.alineacion_horizontal is None:
                 self.alineacion_horizontal = 'nada'
 
-            EsenaActual = context.scene.sequence_editor.active_strip.elements[0]
+            if not hasattr(ClipActual, "elements") or len(ClipActual.elements) == 0:
+                return {'FINISHED'}
+
+            EsenaActual = ClipActual.elements[0]
             AnchoCanva = context.scene.render.resolution_x
             AltoCanva = context.scene.render.resolution_y
             Alto = EsenaActual.orig_height

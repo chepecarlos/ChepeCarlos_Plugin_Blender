@@ -25,7 +25,7 @@ class moverclip(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         # Todo: Solo activar con clip de video
-        if len(bpy.context.selected_sequences) > 0:
+        if len(context.selected_sequences) > 0:
             ClipActual = context.selected_sequences[0]
             if ClipActual.type != "MOVIE" and ClipActual.type != "IMAGE":
                 return False
@@ -34,9 +34,16 @@ class moverclip(bpy.types.Operator):
 
     def execute(self, context):
 
-        if len(bpy.context.selected_sequences) > 0:
+        if len(context.selected_sequences) > 0:
             ClipActual = context.selected_sequences[0]
-            EsenaActual = context.scene.sequence_editor.active_strip.elements[0]
+            if ClipActual.type != "MOVIE" and ClipActual.type != "IMAGE":
+                return {"FINISHED"}
+
+            if not hasattr(ClipActual, "elements") or len(ClipActual.elements) == 0:
+                mostrarMensajeBox("Selecione un clip con media", title="Error", icon="ERROR")
+                return {"FINISHED"}
+
+            EsenaActual = ClipActual.elements[0]
 
             movimiento_horizontal = self.movimiento_horizontal
             movimiento_vertical = self.movimiento_vertical

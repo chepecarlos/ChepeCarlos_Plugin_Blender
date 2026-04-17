@@ -5,7 +5,7 @@ class mi_PT_panel(bpy.types.Panel):
     """Creates a Panel in the Object properties window."""
 
     bl_idname = "MY_PT_mipanel"
-    bl_label = "Panel ALSW"
+    bl_label = "Panel ChepeCarlos"
     bl_space_type = "SEQUENCE_EDITOR"
     bl_region_type = "UI"
 

@@ -1,5 +1,3 @@
-import imp
-
 import bpy
 
 from . import mipanel
@@ -19,14 +17,15 @@ from .operaciones.superAnimar import superanimar
 from .operaciones.palabraPorMinuto import palabraPorMinuto
  
 bl_info = {
-    "name": "ALSW_Plugin_Blender",
+    "name": "ChepeCarlos_Plugin_Blender",
     "author": "ChepeCarlos",
     "description": "Herramientas Extra para Sequencer",
-    "blender": (2, 92, 0),
-    "version": (0, 1, 1),
+    "blender": (5, 1, 0),
+    "version": (0, 2, 0),
     "license": "GPL",
     "location": "Sequencer",
     "warning": "",
+    "support": "COMMUNITY",
     "category": "Sequencer",
 }
 
@@ -55,6 +54,6 @@ def register():
 
 
 def unregister():
-    for cls in classes:
-        bpy.utils.unregister_class(cls)
     remove_hotkey()
+    for cls in reversed(classes):
+        bpy.utils.unregister_class(cls)

@@ -20,11 +20,13 @@ class subtitulo(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        
+
         folder = os.path.dirname(bpy.data.filepath)
         nombreArchivo = os.path.splitext(os.path.basename(bpy.data.filepath))[0]
         folderSubtitulos = f"{folder}/subtitulo_{nombreArchivo}"
         archivoSubtitulo = f"{folderSubtitulos}/out.json"
+
+        return True
 
         return os.path.exists(archivoSubtitulo)
 
@@ -46,7 +48,6 @@ class subtitulo(bpy.types.Operator):
             Titulo = secuencia.name
             if Titulo.startswith(prefijo):
                 seq.sequences.remove(secuencia)
-        
 
         archivoData = "data/blender_subtitulo.json"
         propiedadesSubtítulos = ObtenerArchivo(archivoData)
@@ -66,7 +67,7 @@ class subtitulo(bpy.types.Operator):
         propiedadesSubtítulosExtra = ObtenerArchivo(archivoExtra)
         if propiedadesSubtítulosExtra is None:
             self.report({"INFO"}, f"No existe el archivo {archivoExtra}")
-            mostrarMensajeBox("No existe el archivo {archivoData}", title="Error", icon="ERROR")
+            mostrarMensajeBox(f"No existe el archivo {archivoExtra}", title="Error", icon="ERROR")
             return {"FINISHED"}
 
         urlFuente = propiedadesSubtítulosExtra.get("fuente")
@@ -83,7 +84,7 @@ class subtitulo(bpy.types.Operator):
         nombreArchivo = os.path.splitext(os.path.basename(bpy.data.filepath))[0]
         folderSubtitulos = f"{folder}/subtitulo_{nombreArchivo}"
         archivoSubtitulo = f"{folderSubtitulos}/out.json"
-        
+
         if not os.path.exists(archivoSubtitulo):
             mostrarMensajeBox(f"No Existe el archivo {archivoSubtitulo}", title="Error", icon="ERROR")
             self.report({"INFO"}, f"No Existe el archivo {archivoSubtitulo}")
@@ -92,7 +93,6 @@ class subtitulo(bpy.types.Operator):
         dataSubtitulo = None
         with open(archivoSubtitulo) as f:
             dataSubtitulo = json.load(f)
-
 
         palabrasPorLinea = propiedadesSubtítulosExtra.get("palabras_linea", 1)
 
