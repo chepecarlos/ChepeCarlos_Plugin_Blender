@@ -82,7 +82,7 @@ class superInsertar(bpy.types.Operator):
             else:
                 self.report({"INFO"}, f"No se puede insertar {tipo}")
 
-            for secuencia in context.selected_sequences:
+            for secuencia in context.selected_strips:
                 listaInsertado.append(secuencia.name)
                 for atributos in insertar:
                     if atributos in ["archivo", "desface", "duracion", "canal"]:

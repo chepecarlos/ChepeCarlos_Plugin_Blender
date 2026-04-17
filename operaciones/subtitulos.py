@@ -26,7 +26,7 @@ class subtitulo(bpy.types.Operator):
         folderSubtitulos = f"{folder}/subtitulo_{nombreArchivo}"
         archivoSubtitulo = f"{folderSubtitulos}/out.json"
 
-        return True
+        # return True
 
         return os.path.exists(archivoSubtitulo)
 
@@ -178,7 +178,7 @@ class subtitulo(bpy.types.Operator):
                 final = frameFinal
 
             bpy.ops.sequencer.effect_strip_add(type="TEXT", frame_start=inicio, frame_end=final, channel=10)
-            clipActual = context.selected_sequences[0]
+            clipActual = (context.selected_strips)[0]
             # TODO; revisar problema con nombre con numeros
             clipActual.name = f"{prefijo}{frase}"
             clipActual.text = frase.capitalize()
@@ -211,7 +211,7 @@ class subtitulo(bpy.types.Operator):
                 if inicioPalabra != finalPalabra:
                     bpy.ops.sequencer.effect_strip_add(type="TEXT", frame_start=inicioPalabra, frame_end=finalPalabra, channel=11)
 
-                    clipActual = context.selected_sequences[0]
+                    clipActual = (context.selected_strips)[0]
                     clipActual.name = f"{prefijo}{mensaje}"
 
                     clipActual.text = mensaje

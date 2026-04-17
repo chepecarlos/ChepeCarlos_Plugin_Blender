@@ -8,6 +8,7 @@ class mi_PT_panel(bpy.types.Panel):
     bl_label = "Panel ChepeCarlos"
     bl_space_type = "SEQUENCE_EDITOR"
     bl_region_type = "UI"
+    bl_category = "ChepeCarlos"
 
     def draw(self, context):
         """Dibujar el panel."""
@@ -28,6 +29,10 @@ class mi_PT_panel(bpy.types.Panel):
         row = layout.row()
         row.label(text="Subtítulos")
         ops = row.operator("scene.subtitulo", text="Agregar")
+
+        row = layout.row()
+        row.label(text="Indice NocheProgramacion")
+        ops = row.operator("scene.exportarindice", text="Copiar")
 
         row = layout.row()
         row.label(text="Musica sobre clip", icon="SOUND")
@@ -101,10 +106,6 @@ class mi_PT_panel(bpy.types.Panel):
         row = layout.row()
         ops = row.operator("scene.superindice", text="Generar")
 
-        row = layout.row()
-        row.label(text="Indice para NocheProgramacion")
-        row = layout.row()
-        ops = row.operator("scene.exportarindice", text="Copiar")
 
         row = layout.row()
         row.label(text="Exportar Markas Extras")

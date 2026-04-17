@@ -33,7 +33,7 @@ class superanimar(bpy.types.Operator):
 
             return {"FINISHED"}
 
-        for secuencia in context.selected_sequences:
+        for secuencia in context.selected_strips:
             self.report({"INFO"}, f"Animando {secuencia.name} ")
 
             frameAnterior = secuencia.frame_final_start

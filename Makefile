@@ -1,6 +1,6 @@
 BLENDER ?= /home/chepecarlos/5.Programas/1.Edicion/1.Blender/blender-5.1.1-linux-x64/blender
 PROJECT_ROOT ?= /home/chepecarlos/5.Programas/1.Edicion
-ADDON_MODULE ?= ALSW_Plugin_Blender
+ADDON_MODULE ?= ChepeCarlos_Plugin_Blender
 DIST_DIR ?= dist
 BLENDER_CONFIG_VERSION ?= 5.1
 ADDONS_DIR ?= $(HOME)/.config/blender/$(BLENDER_CONFIG_VERSION)/scripts/addons

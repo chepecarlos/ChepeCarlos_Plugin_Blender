@@ -27,7 +27,7 @@ class sobreponeraudio(bpy.types.Operator):
     # Verifica que este alguna secuencia selecionada
     @classmethod
     def poll(cls, context):
-        return context.selected_sequences
+        return context.selected_strips
 
     def execute(self, context):
 
@@ -48,30 +48,30 @@ class sobreponeraudio(bpy.types.Operator):
             self.report({"INFO"}, f"Archivo no Existe {VideoActual}")
             return {"FINISHED"}
 
-        if len(context.selected_sequences) > 0:
+        if len(context.selected_strips) > 0:
 
-            Inicio = context.selected_sequences[0].frame_final_start
-            Final = context.selected_sequences[0].frame_final_end
-            for clip in context.selected_sequences:
+            Inicio = (context.selected_strips)[0].frame_final_start
+            Final = (context.selected_strips)[0].frame_final_end
+            for clip in context.selected_strips:
                 if clip.frame_final_start < Inicio:
                     Inicio = clip.frame_final_start
                 if clip.frame_final_end > Final:
                     Final = clip.frame_final_end
 
-            Canal = context.selected_sequences[0].channel + 1
+            Canal = (context.selected_strips)[0].channel + 1
 
             bpy.ops.sequencer.sound_strip_add(
                 filepath=VideoActual, frame_start=Inicio, channel=Canal)
 
-            context.selected_sequences[0].show_waveform = True
-            context.selected_sequences[0].volume = 0.3
+            (context.selected_strips)[0].show_waveform = True
+            (context.selected_strips)[0].volume = 0.3
 
             bpy.ops.sequencer.split(
                 frame=Final, channel=Canal, type='SOFT', side='RIGHT')
 
             bpy.ops.sequencer.delete()
 
-            # bpy.context.selected_sequences[0].use_proxy = True
+            # bpy.context.scene.sequence_editor.selected_sequences[0].use_proxy = True
         else:
             mostrarMensajeBox("Selecione una pista",
                              title="Error", icon="ERROR")

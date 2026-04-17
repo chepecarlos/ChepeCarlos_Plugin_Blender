@@ -71,7 +71,7 @@ class superindice(bpy.types.Operator):
             if not Titulo.startswith(">"):
                 frame = indice.frame
                 bpy.ops.sequencer.effect_strip_add(type="TEXT", frame_start=frame, frame_end=int(frame + duraciónIndice), channel=canal)
-                clipActual = context.selected_sequences[0]
+                clipActual = (context.selected_strips)[0]
                 clipActual.name = f"{prefijo}{Titulo}"
                 clipActual.text = Titulo
 

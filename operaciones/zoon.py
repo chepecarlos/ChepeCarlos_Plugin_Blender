@@ -40,21 +40,21 @@ class superzoon(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         # Todo: Solo activar con clip de video
-        if len(context.selected_sequences) > 0:
-            ClipActual = context.selected_sequences[0]
+        if len(context.selected_strips) > 0:
+            ClipActual = (context.selected_strips)[0]
             if ClipActual.type != "MOVIE" and ClipActual.type != "IMAGE":
                 return False
-        return context.selected_sequences
+        return context.selected_strips
 
     def execute(self, context):
 
-        if len(context.selected_sequences) > 0:
-            ClipActual = context.selected_sequences[0]
+        if len(context.selected_strips) > 0:
+            ClipActual = (context.selected_strips)[0]
 
             if ClipActual.type != "MOVIE" and ClipActual.type != "IMAGE":
                 return{'FINISHED'}
 
-            ClipActual = context.selected_sequences[0]
+            ClipActual = (context.selected_strips)[0]
             if not hasattr(ClipActual, "elements") or len(ClipActual.elements) == 0:
                 return {'FINISHED'}
 
