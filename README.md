@@ -1,68 +1,395 @@
-# ALSW_Plugin_Blender
+# ChepeCarlos Plugin for Blender
 
-Plubin para ser mas feliz editando con atajos o macros que te ayudara a editar mas rapido
+Un plugin completo para Blender 5.x que acelera el flujo de trabajo en el Sequence Editor con herramientas potentes de edición de video y audio.
 
-# informacion 
+## 📋 Tabla de Contenidos
 
-archivos de config en 
-.config/pluginBlenderALSW
+- [Instalación](#instalación)
+- [Funciones Principales](#funciones-principales)
+- [Cómo Usar](#cómo-usar)
+- [Configuración](#configuración)
+- [Atajos de Teclado](#atajos-de-teclado)
 
-## subtitulos
+## 📦 Instalación
 
-blender_subtitulo.json
+1. **Descargar el plugin:**
+   - Clona o descarga este repositorio en tu máquina
 
-## Configurar
+2. **Instalar en Blender:**
+   - Abre Blender 5.1.0 o superior
+   - Ve a `Edit` → `Preferences` → `Add-ons`
+   - Haz clic en `Install` y selecciona la carpeta del plugin
+   - Busca "ChepeCarlos_Plugin_Blender" y actívalo
 
-Los Atributos se guarda dentro de folder (~/.config/elgatoalsw-cli) para conbinar con proyecto [ElGatoALSW](https://github.com/chepecarlos/ElGatoALSW) de Macros, el archivo donde se guardan los atribuos es (data/blender.json)
+3. **Verificar instalación:**
+   - Abre el Sequence Editor
+   - En el panel lateral derecho (presiona `N`), verás una pestaña llamada "ChepeCarlos"
 
-## Macros
+## 🎬 Funciones Principales
 
-Macros en el sistema
+### 1. **Insertar Clip**
+Inserta imágenes, videos o archivos de audio en la posición del cursor actual del timeline.
 
-## Insertar Clip
+**Ubicación:** Panel ChepeCarlos → `Insertar`
 
-Inserta clip en posicion de Cursor, ya sea Audio, Video o Imagen
+**Archivo de configuración:** `data/insertar.json`
 
-La ruta tiene que ser Absoluta
+**Parámetros configurables:**
+| Parámetro | Tipo | Predeterminado | Descripción |
+|-----------|------|---|---|
+| clip | string | - | Ruta absoluta del archivo a insertar |
+| volumen | float | 1 | Nivel de volumen (solo para audio) |
+| desface | float | 0 | Desplazamiento en frames |
+| duracion | float | 60 | Duración en frames |
+| posicion_x | int | 0 | Posición en eje X (para imágenes/video) |
+| posicion_y | int | 0 | Posición en eje Y (para imágenes/video) |
+| origen_x | float | 0.5 | Origen X para transformaciones |
+| origen_y | float | 0.5 | Origen Y para transformaciones |
+| opacidad | float | 1 | Nivel de opacidad (0-1) |
+| escala | float | 1 | Factor de escala |
+| angulo | float | 0 | Ángulo de rotación en grados |
 
-| Nombre     | Atributo   | Tipo       | Requerido | Defaul    | Ejemplo         |
-| ---------- | ---------- | ---------- | --------- | --------- | --------------- |
-| Direction  | clip       | stl        | true      | Requerido | /home/pollo.png |
-| Volumen    | volumen    | float (R+) | false     | 1         | 1.2             |
-| Desfacé    | desface    | float      | false     | 0         | -10             |
-| Duración   | duracion   | float      | false     | 60        | 10              |
-| Posición X | posicion_x | int        | false     | 0         | 300             |
-| Posición y | posicion_y | int        | false     | 0         | 22              |
-| Origen X   | origen_x   | float      | false     | 0.5       | 0.3             |
-| Origen Y   | origen_y   | float      | false     | 0.5       | 0.3             |
-| Opacidad   | opacidad   | float      | false     | 1         | 0.2             |
-| Escala     | escala     | float      | false     |           | 3               |
-| Angulo     | angulo     | float      | false     | 0         | 30.5            |
+**Ejemplo de uso:**
+```json
+{
+  "clip": "/home/usuario/videos/intro.mp4",
+  "volumen": 1.0,
+  "desface": 0,
+  "duracion": 120,
+  "posicion_x": 0,
+  "posicion_y": 0,
+  "origen_x": 0.5,
+  "origen_y": 0.5,
+  "opacidad": 1.0,
+  "escala": 1.0,
+  "angulo": 0
+}
+```
 
-Atajo de Teclado:
+### 2. **Sobreponer Audio**
+Coloca automáticamente un clip de audio sobre uno o más clips seleccionados en el timeline.
+
+**Ubicación:** Panel ChepeCarlos
+
+**Uso:**
+- Selecciona uno o más clips en el timeline
+- Haz clic en "Sobreponer Audio"
+- El audio se posicionará encima de los clips seleccionados con volumen automático
+
+### 3. **Música sobre Clip**
+Añade una pista de música sobre clips seleccionados con configuración automática de volumen y visualización de forma de onda.
+
+**Ubicación:** Panel ChepeCarlos → `MrTee`
+
+**Características:**
+- Posiciona automáticamente el audio
+- Muestra la forma de onda
+- Ajusta volumen a 0.3 por defecto
+
+### 4. **Alinear Clips**
+Alinea automáticamente múltiples clips seleccionados en el timeline.
+
+**Ubicación:** Panel ChepeCarlos → `Ariba`
+
+**Uso:**
+- Selecciona 2 o más clips
+- Presiona el botón de Alinear
+- Los clips se alinearán horizontalmente
+
+### 5. **Zoom/Escala de Clips**
+Amplía o reduce el tamaño de clips seleccionados.
+
+**Ubicación:** Panel ChepeCarlos
+
+**Uso:**
+- Selecciona uno o más clips de video/imagen
+- Ajusta los parámetros de escala
+- La transformación se aplica automáticamente
+
+### 6. **Mover Clip**
+Desplaza clips seleccionados en direcciones específicas.
+
+**Funciones:**
+- Mover a la derecha en el timeline
+- Mover a la izquierda en el timeline
+- Mover hacia arriba (diferentes canales)
+- Mover hacia abajo (diferentes canales)
+
+### 7. **Generador de Índices (Marcadores como Texto)**
+Convierte marcadores del timeline en clips de texto superpuestos en el video.
+
+**Ubicación:** Panel ChepeCarlos → `Agregar`
+
+**Uso:**
+1. Crea marcadores en el timeline (presiona `M`)
+2. Asigna nombres a los marcadores
+3. Ejecuta "Generador de Índices"
+4. Los marcadores se convertirán en clips de texto
+
+### 8. **Copiar Tiempo del Cursor (Hueva)**
+Copia el tiempo actual del cursor al portapapeles para referencia rápida.
+
+**Ubicación:** Panel ChepeCarlos → `Hueva`
+
+**Uso:** Muy útil para documentar tiempos específicos durante la edición
+
+### 9. **Exportar Índices Extras**
+Exporta información de marcadores extras para procesamiento posterior o documentación.
+
+**Ubicación:** Panel ChepeCarlos
+
+**Nota:** Solo funciona si hay marcadores con prefijos especiales en la escena
+
+**Tipos de prefijos para marcadores:**
+| Prefijo | Tipo | Ejemplo |
+|---------|------|---------|
+| >T | Tarjeta/Title | >T Créditos |
+| >L | Link | >L www.ejemplo.com |
+| >V | Video | >V Tutorial Completo |
+| >A | Ads/Publicidad | >A Publicidad Sponsors |
+| >C | Créditos | >C Música por: Artista |
+| >P | Pantalla Final | >P Suscribete ahora |
+| >E | Recursos | >E Imágenes: Unsplash |
+
+### 10. **Subtítulos**
+Gestiona y procesa archivos de subtítulos sincronizados con el video.
+
+**Ubicación:** Panel ChepeCarlos
+
+**Archivo de configuración:** `~/.config/data/blender_subtitulo.json`
+
+**Características:**
+- Carga automática de archivos .srt
+- Sincronización con timeline
+- Visualización automática
+
+### 11. **Auto Anotar**
+Anotaciones automáticas en clips para documentación rápida.
+
+**Ubicación:** Panel ChepeCarlos
+
+**Uso:**
+- Selecciona clips
+- Haz clic en Auto Anotar
+- Las notas se guardan en metadatos
+
+### 12. **Animar Clip**
+Aplica animaciones predefinidas a clips seleccionados.
+
+**Ubicación:** Panel ChepeCarlos
+
+**Tipos de animaciones disponibles:**
+- Zoom in/out gradual
+- Movimiento/Pan
+- Fade in/out
+- Rotación suave
+- Cambio de opacidad
+
+### 13. **Palabras Por Minuto (PPM)**
+Calcula las palabras por minuto de un script o narración para verificar tiempos de locución.
+
+**Ubicación:** Panel ChepeCarlos → `Calcular`
+
+**Uso:**
+1. Selecciona el clip de audio o carga un archivo de script
+2. Haz clic en "Calcular PPM"
+3. El resultado se muestra en la consola de Blender
+4. Útil para sincronizar narración con tiempo disponible
+
+## 🎮 Cómo Usar
+
+### Acceder al Panel del Plugin
+
+1. Abre el **Sequence Editor** en Blender
+   - Puedes abrirlo desde `Editor Type` en cualquier editor
+   - O acceder desde la ventana superior: `Editor` → `Sequence Editor`
+
+2. Presiona `N` para abrir el panel lateral (si está cerrado)
+
+3. Busca la pestaña **"ChepeCarlos"** en el panel lateral derecho
+
+### Flujo de trabajo típico
+
+#### Insertar Clips
+1. Coloca el cursor en el timeline donde quieres insertar el clip
+2. Configura el archivo en `data/insertar.json` con la ruta absoluta del archivo
+3. Haz clic en "Insertar"
+4. El clip se agregará en la posición del cursor
+
+#### Editar Clips
+1. Selecciona clips con `LMB` (clic izquierdo)
+2. Usa las herramientas disponibles:
+   - **Alinear**: Para sincronizar múltiples clips
+   - **Mover**: Para desplazar en el timeline
+   - **Escala/Zoom**: Para redimensionar
+3. Ajusta propiedades según sea necesario
+
+#### Agregar Audio
+1. Selecciona los clips donde quieres agregar audio
+2. Usa "Sobreponer Audio" o "Música sobre Clip"
+3. El audio se posicionará automáticamente
+
+#### Agregar Marcadores como Texto
+1. Crea marcadores en el timeline (presiona `M`)
+2. Nombre los marcadores (servirán como texto)
+3. Usa "Generador de Índices"
+4. Los marcadores se convertirán en clips de texto
+
+#### Exportar Marcos de Referencia
+1. Crea marcadores con prefijos (>T, >L, >V, etc.)
+2. Usa "Exportar Índices Extras"
+3. Se generará un archivo de referencia para post-producción
+
+## ⚙️ Configuración
+
+### Archivos de Configuración
+
+Los archivos de configuración se guardan localmente en el proyecto y en `~/.config/`:
+
+**Archivos principales:**
+- **`data/insertar.json`** - Configuración para insertar clips
+- **`data/blender_subtitulo.json`** - Configuración de subtítulos
+- **`data/blender.json`** - Configuración general del plugin
+
+### Estructura de Directorios
 
 ```
-ctrl + shift + y
+ChepeCarlos_Plugin_Blender/
+├── __init__.py                 # Inicializador del plugin
+├── mipanel.py                  # Panel UI
+├── README.md                   # Este archivo
+├── Makefile                    # Compilación y pruebas
+├── data/                       # Archivos de configuración
+│   ├── insertar.json
+│   ├── blender_subtitulo.json
+│   └── blender.json
+└── operaciones/                # Módulos de funcionalidades
+    ├── alinear.py
+    ├── exportar.py
+    ├── exportarextras.py
+    ├── hueva.py
+    ├── indice.py
+    ├── macros.py
+    ├── mover.py
+    ├── sobreponeraudio.py
+    ├── subtitulos.py
+    ├── superAnimar.py
+    ├── superInsertar.py
+    ├── zoon.py
+    ├── autoanotar.py
+    ├── palabraPorMinuto.py
+    ├── extras.py
+    ├── FuncionesArchivos.py
+    └── funcionesExtras.py
 ```
 
-## Sobreponer Audio
+### Valores por Defecto
 
-Has clip sobre un o mas clip para agregar
+**Para Insertar Clips:**
+```json
+{
+  "clip": "/ruta/absoluta/archivo",
+  "volumen": 1.0,
+  "desface": 0,
+  "duracion": 60,
+  "posicion_x": 0,
+  "posicion_y": 0,
+  "origen_x": 0.5,
+  "origen_y": 0.5,
+  "opacidad": 1.0,
+  "escala": 1.0,
+  "angulo": 0
+}
+```
 
-## Exportar Extra
+## ⌨️ Atajos de Teclado
 
-Exportar markas extras para ayudar en la preparacion de video
+El plugin soporta macros personalizadas. Los atajos se pueden definir en la configuración de macros de Blender.
 
-**Nota**: Solo funciona si existe Marcas
+**Atajos sugeridos (configurable):**
+- `Ctrl + Shift + Y` - Insertar Clip (predeterminado)
+- Otros atajos se pueden asignar según preferencia
 
-**Tipos de Prefijos**
+Para asignar atajos personalizados:
+1. Ve a `Edit` → `Preferences` → `Keymap`
+2. Busca las operaciones del plugin (comienzan con `scene.`)
+3. Asigna los atajos deseados
 
-| Nombre              | Prefijo | Ejemplo                      |
-| ------------------- | ------- | ---------------------------- |
-| Tarjeta             | >T      | >T Video de MQTT             |
-| Link                | >L      | >L www.google.com            |
-| Video               | >V      | >V Video MQTT                |
-| Ads                 | >A      | >A Publicidad de Chepecarlos |
-| Creditor            | >C      | >C Gracias por la musica a   |
-| Pantalla Final      | >P      | >P Video de MQTT             |
-| Recursos de Edición | >E      | >E Imágenes de arduino       |
+## 🐛 Solución de Problemas
+
+### El plugin no aparece en Add-ons
+**Solución:**
+- Verifica que Blender sea versión 5.1.0 o superior
+- Asegúrate de que activaste el plugin en las preferencias
+- Reinicia Blender si es necesario
+
+### Las funciones no funcionan o dan errores
+**Solución:**
+- Verifica que el Sequence Editor esté abierto
+- Selecciona al menos un clip en el timeline (para funciones que lo requieran)
+- Consulta la consola de Blender (`Window` → `Toggle System Console`)
+- Revisa que los archivos de configuración JSON sean válidos
+
+### Errores al insertar clips
+**Solución:**
+- Verifica que la ruta del archivo sea **absoluta** (no relativa)
+- Asegúrate de que el archivo existe y es accesible
+- Comprueba que tienes permisos de lectura en la carpeta
+- Verifica que el archivo sea un formato soportado (MP4, PNG, WAV, etc.)
+
+### El botón "Insertar" está deshabilitado
+**Causa:** No hay un archivo configurado en `data/insertar.json`
+
+**Solución:**
+1. Crea el archivo `data/insertar.json` en la carpeta del plugin
+2. Agrega la configuración con la ruta del archivo
+3. Recarga el plugin
+
+### Audio no sincronizado
+**Solución:**
+- Verifica que los clips tengan el same framerate
+- Asegúrate de que el cursor está en la posición correcta del timeline
+- Revisa que los clips no estén bloqueados
+
+## 📋 Requisitos del Sistema
+
+- **Blender:** 5.1.0 o superior
+- **Python:** 3.11 o superior (incluido en Blender)
+- **Sistema Operativo:** Windows, macOS o Linux
+- **Espacio en disco:** ~50 MB
+
+## ⚡ Performance
+
+Este plugin está optimizado para trabajar de manera eficiente incluso con proyectos grandes:
+
+- Rendering rápido de transformaciones
+- Procesamiento por lotes para múltiples clips
+- Caché automática para operaciones frecuentes
+
+## 📚 Recursos Adicionales
+
+- [Documentación de Blender Python API](https://docs.blender.org/api/current/)
+- [Tutorial del Sequence Editor](https://docs.blender.org/manual/en/latest/editors/sequence/)
+- [Guía de Scripting de Blender](https://docs.blender.org/manual/en/latest/advanced/scripting/)
+
+## 📄 Licencia
+
+GPL - Código libre y abierto
+
+## 🤝 Contribuciones
+
+Las contribuciones son bienvenidas. Para reportar bugs o sugerir mejoras:
+
+1. Describe el problema o idea claramente
+2. Incluye pasos para reproducir el error
+3. Especifica tu versión de Blender y SO
+
+## 👤 Autor
+
+**ChepeCarlos** - Herramientas profesionales para edición de video en Blender
+
+---
+
+**Última actualización:** 17 de abril de 2026
+**Versión del Plugin:** 0.2.0
+**Versión mínima de Blender:** 5.1.0

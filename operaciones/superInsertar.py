@@ -30,8 +30,8 @@ class superInsertar(bpy.types.Operator):
         listaInsertado = list()
 
         if dataInsertar is None:
-            self.report({"INFO"}, f"No información de insertar .config/pluginBlenderALSW/data/insertar.json")
-            mostrarMensajeBox("No información de insertar config/pluginBlenderALSW/data/aninsertarimar.json", title="Error", icon="ERROR")
+            self.report({"INFO"}, f"No información de insertar .config/pluginBlenderChepeCarlos/data/insertar.json")
+            mostrarMensajeBox("No información de insertar config/pluginBlenderChepeCarlos/data/aninsertarimar.json", title="Error", icon="ERROR")
 
             return {"FINISHED"}
 
@@ -67,18 +67,10 @@ class superInsertar(bpy.types.Operator):
                 )
             elif tipo in ["acc", "ac3", "flac", "mp2", "mp3", "m4a", "pcm", "ogg"]:
                 self.report({"INFO"}, f"Insertando Audio {tipo} - {frameActual + desface}")
-                bpy.ops.sequencer.sound_strip_add(
-                    filepath=archivo,
-                    frame_start=frameActual + desface,
-                    channel=canal
-                )
+                bpy.ops.sequencer.sound_strip_add(filepath=archivo, frame_start=frameActual + desface, channel=canal)
             elif tipo in ["avi", "mp4", "mpg", "mpeg", "mov", "mkv", "dv", "flv"]:
                 self.report({"INFO"}, f"Insertando Video {tipo} - {frameActual + desface}")
-                bpy.ops.sequencer.movie_strip_add(
-                    filepath=archivo,
-                    frame_start=frameActual + desface,
-                    channel=canal
-                )
+                bpy.ops.sequencer.movie_strip_add(filepath=archivo, frame_start=frameActual + desface, channel=canal)
             else:
                 self.report({"INFO"}, f"No se puede insertar {tipo}")
 

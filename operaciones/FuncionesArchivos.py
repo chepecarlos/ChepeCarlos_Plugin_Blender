@@ -9,7 +9,7 @@ from pathlib import Path
 
 def ObtenerFolderConfig():
     """Devuelte ruta donde esta el folder de configuracion."""
-    Folder = UnirPath(Path.home(), '.config/pluginBlenderALSW')
+    Folder = UnirPath(Path.home(), ".config/pluginBlenderChepeCarlos")
 
     return Folder
 
@@ -52,7 +52,7 @@ def SalvarArchivo(Archivo, Data):
     """Sobre escribe data en archivo."""
     ArchivoConfig = ObtenerFolderConfig()
     Archivo = UnirPath(ArchivoConfig, Archivo)
-    with open(Archivo, 'w+') as f:
+    with open(Archivo, "w+") as f:
         json.dump(Data, f, indent=1)
 
 
@@ -62,11 +62,11 @@ def SalvarValor(Archivo, Atributo, Valor, local=True):
     ArchivoConfig = ObtenerFolderConfig()
     if local:
         Archivo = UnirPath(ArchivoConfig, Archivo)
-    
+
     data = ObtenerArchivo(Archivo)
     if data is None:
         return None
-   
+
     Tipo = type(Atributo)
     if Tipo is list:
         # TODO Buscar como insertar para mas de nos niveles
@@ -77,7 +77,7 @@ def SalvarValor(Archivo, Atributo, Valor, local=True):
     else:
         data[Atributo] = Valor
 
-    with open(Archivo, 'w') as f:
+    with open(Archivo, "w") as f:
         json.dump(data, f, indent=2)
 
 
@@ -95,7 +95,7 @@ def RelativoAbsoluto(Path, FolderActual):
 
 def QuitarPrefixInicio(text, prefix):
     """Quita un Prefijo o patron del inicio de una cadena."""
-    return text[text.startswith(prefix) and len(prefix):]
+    return text[text.startswith(prefix) and len(prefix) :]
 
 
 def ObtenerListaFolder(Directorio):

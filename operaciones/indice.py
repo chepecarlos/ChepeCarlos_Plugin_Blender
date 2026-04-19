@@ -37,16 +37,16 @@ class superindice(bpy.types.Operator):
         dataIndice = ObtenerArchivo("data/indice.json")
 
         if dataIndice is None:
-            self.report({"INFO"}, f"No informacion de animacion .config/pluginBlenderALSW/data/indice.json")
-            mostrarMensajeBox("No informacion de animacion .config/pluginBlenderALSW/data/indice.json", title="Error", icon="ERROR")
+            self.report({"INFO"}, f"No informacion de animacion .config/pluginBlenderChepeCarlos/data/indice.json")
+            mostrarMensajeBox("No informacion de animacion .config/pluginBlenderChepeCarlos/data/indice.json", title="Error", icon="ERROR")
 
             return {"FINISHED"}
 
         dataIndiceExtra = ObtenerArchivo("data/indice_extra.json")
 
         if dataIndiceExtra is None:
-            self.report({"INFO"}, f"No informacion de animacion .config/pluginBlenderALSW/data/indice_extra.json")
-            mostrarMensajeBox("No informacion de animacion .config/pluginBlenderALSW/data/indice_extra.json", title="Error", icon="ERROR")
+            self.report({"INFO"}, f"No informacion de animacion .config/pluginBlenderChepeCarlos/data/indice_extra.json")
+            mostrarMensajeBox("No informacion de animacion .config/pluginBlenderChepeCarlos/data/indice_extra.json", title="Error", icon="ERROR")
 
             return {"FINISHED"}
 

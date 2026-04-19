@@ -28,8 +28,8 @@ class superanimar(bpy.types.Operator):
         dataAnimación = ObtenerArchivo("data/animar.json")
 
         if dataAnimación is None:
-            self.report({"INFO"}, f"No informacion de animacion .config/pluginBlenderALSW/data/animar.json")
-            mostrarMensajeBox("No informacion de animacion .config/pluginBlenderALSW/data/animar.json", title="Error", icon="ERROR")
+            self.report({"INFO"}, f"No informacion de animacion .config/pluginBlenderChepeCarlos/data/animar.json")
+            mostrarMensajeBox("No informacion de animacion .config/pluginBlenderChepeCarlos/data/animar.json", title="Error", icon="ERROR")
 
             return {"FINISHED"}
 

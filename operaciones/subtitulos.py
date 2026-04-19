@@ -35,7 +35,18 @@ class subtitulo(bpy.types.Operator):
 
         scene = context.scene
         seq = scene.sequence_editor
-        secuencias = seq.sequences_all
+        if seq is None:
+            seq = scene.sequence_editor_create()
+
+        if hasattr(seq, "sequences_all"):
+            secuencias = list(seq.sequences_all)
+            colección_secuencias = seq.sequences
+        elif hasattr(seq, "strips_all"):
+            secuencias = list(seq.strips_all)
+            colección_secuencias = seq.strips
+        else:
+            secuencias = list(getattr(seq, "sequences", []))
+            colección_secuencias = getattr(seq, "sequences", None)
         render = context.scene.render
         frameFinal = context.scene.frame_end
         frameInicio = context.scene.frame_start
@@ -46,8 +57,8 @@ class subtitulo(bpy.types.Operator):
         prefijo = "subtitulo."
         for secuencia in secuencias:
             Titulo = secuencia.name
-            if Titulo.startswith(prefijo):
-                seq.sequences.remove(secuencia)
+            if Titulo.startswith(prefijo) and colección_secuencias is not None:
+                colección_secuencias.remove(secuencia)
 
         archivoData = "data/blender_subtitulo.json"
         propiedadesSubtítulos = ObtenerArchivo(archivoData)
@@ -177,8 +188,10 @@ class subtitulo(bpy.types.Operator):
             if final > frameFinal:
                 final = frameFinal
 
-            bpy.ops.sequencer.effect_strip_add(type="TEXT", frame_start=inicio, frame_end=final, channel=10)
-            clipActual = (context.selected_strips)[0]
+            clipActual = self.agregarTexto(context, inicio, final, 10)
+            if clipActual is None:
+                self.report({"ERROR"}, "No se pudo crear strip de subtitulo")
+                continue
             # TODO; revisar problema con nombre con numeros
             clipActual.name = f"{prefijo}{frase}"
             clipActual.text = frase.capitalize()
@@ -200,8 +213,8 @@ class subtitulo(bpy.types.Operator):
 
                 inicioPalabra = trasformarFrame(inicioPalabra, framerate) + frameInicio
                 finalPalabra = trasformarFrame(finalPalabra, framerate) + frameInicio
-                if final > frameFinal:
-                    final = frameFinal
+                if finalPalabra > frameFinal:
+                    finalPalabra = frameFinal
                 if inicioPalabra == finalPalabra:
                     self.report({"INFO"}, f"Ignorar: {mensaje} - {palabra.get('start', 0)} - {palabra.get('end', 0)}")
                 if contadorInterno == 0:
@@ -209,9 +222,10 @@ class subtitulo(bpy.types.Operator):
                     contadorInterno += 1
 
                 if inicioPalabra != finalPalabra:
-                    bpy.ops.sequencer.effect_strip_add(type="TEXT", frame_start=inicioPalabra, frame_end=finalPalabra, channel=11)
-
-                    clipActual = (context.selected_strips)[0]
+                    clipActual = self.agregarTexto(context, inicioPalabra, finalPalabra, 11)
+                    if clipActual is None:
+                        self.report({"ERROR"}, "No se pudo crear strip de palabra")
+                        continue
                     clipActual.name = f"{prefijo}{mensaje}"
 
                     clipActual.text = mensaje
@@ -236,6 +250,57 @@ class subtitulo(bpy.types.Operator):
                 fraseAnterior += mensaje + " "
 
         return {"FINISHED"}
+
+    def agregarTexto(self, context, inicio, final, canal):
+        frameInicio = int(inicio)
+        frameFinal = max(frameInicio + 1, int(final))
+        duración = max(1, frameFinal - frameInicio)
+
+        seq = context.scene.sequence_editor
+        if seq is None:
+            seq = context.scene.sequence_editor_create()
+
+        if hasattr(seq, "sequences"):
+            colección = seq.sequences
+        elif hasattr(seq, "strips"):
+            colección = seq.strips
+        else:
+            return None
+
+        nombreTemporal = f"subtitulo.tmp.{canal}.{frameInicio}"
+
+        try:
+            return colección.new_effect(
+                name=nombreTemporal,
+                type="TEXT",
+                channel=canal,
+                frame_start=frameInicio,
+                frame_end=frameFinal,
+            )
+        except TypeError:
+            try:
+                return colección.new_effect(
+                    name=nombreTemporal,
+                    type="TEXT",
+                    channel=canal,
+                    frame_start=frameInicio,
+                    length=duración,
+                )
+            except TypeError:
+                try:
+                    return colección.new_effect(
+                        nombreTemporal,
+                        "TEXT",
+                        canal,
+                        frameInicio,
+                        frameFinal,
+                    )
+                except Exception as error:
+                    self.report({"ERROR"}, f"Error creando strip: {error}")
+                    return None
+        except Exception as error:
+            self.report({"ERROR"}, f"Error creando strip: {error}")
+            return None
 
     def calcularAnchoFrase(self, mensaje, idFuente, tamañoFuente):
         blf.size(idFuente, tamañoFuente)

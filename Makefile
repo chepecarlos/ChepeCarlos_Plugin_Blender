@@ -21,13 +21,17 @@ blenderaddon-check:
 	$(BLENDER) --background --factory-startup --python-expr "import bpy; print(bpy.app.version_string)"
 
 zip:
-	mkdir -p "$(DIST_DIR)"
-	zip -r "$(DIST_DIR)/$(ZIP_NAME)" . \
-		-x ".git/*" \
-		-x ".mypy_cache/*" \
-		-x "__pycache__/*" \
-		-x "operaciones/__pycache__/*" \
-		-x "$(DIST_DIR)/*"
+	mkdir -p "$(DIST_DIR)/.zip_tmp/$(ADDON_MODULE)"
+	rsync -a --delete \
+		--exclude ".git/" \
+		--exclude ".mypy_cache/" \
+		--exclude ".vscode/" \
+		--exclude "__pycache__/" \
+		--exclude "operaciones/__pycache__/" \
+		--exclude "$(DIST_DIR)/" \
+		./ "$(DIST_DIR)/.zip_tmp/$(ADDON_MODULE)/"
+	cd "$(DIST_DIR)/.zip_tmp" && zip -r "../$(ZIP_NAME)" "$(ADDON_MODULE)"
+	rm -rf "$(DIST_DIR)/.zip_tmp"
 	@echo "ZIP listo en $(DIST_DIR)/$(ZIP_NAME)"
 
 zlip: zip
