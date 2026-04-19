@@ -32,22 +32,22 @@ Inserta imágenes, videos o archivos de audio en la posición del cursor actual 
 
 **Ubicación:** Panel ChepeCarlos → `Insertar`
 
-**Archivo de configuración:** `data/insertar.json`
+**Archivo de configuración:** `~/.config/pluginBlenderChepeCarlos/data/insertar.json`
 
 **Parámetros configurables:**
-| Parámetro | Tipo | Predeterminado | Descripción |
-|-----------|------|---|---|
-| clip | string | - | Ruta absoluta del archivo a insertar |
-| volumen | float | 1 | Nivel de volumen (solo para audio) |
-| desface | float | 0 | Desplazamiento en frames |
-| duracion | float | 60 | Duración en frames |
-| posicion_x | int | 0 | Posición en eje X (para imágenes/video) |
-| posicion_y | int | 0 | Posición en eje Y (para imágenes/video) |
-| origen_x | float | 0.5 | Origen X para transformaciones |
-| origen_y | float | 0.5 | Origen Y para transformaciones |
-| opacidad | float | 1 | Nivel de opacidad (0-1) |
-| escala | float | 1 | Factor de escala |
-| angulo | float | 0 | Ángulo de rotación en grados |
+| Parámetro  | Tipo   | Predeterminado | Descripción                             |
+| ---------- | ------ | -------------- | --------------------------------------- |
+| clip       | string | -              | Ruta absoluta del archivo a insertar    |
+| volumen    | float  | 1              | Nivel de volumen (solo para audio)      |
+| desface    | float  | 0              | Desplazamiento en frames                |
+| duracion   | float  | 60             | Duración en frames                      |
+| posicion_x | int    | 0              | Posición en eje X (para imágenes/video) |
+| posicion_y | int    | 0              | Posición en eje Y (para imágenes/video) |
+| origen_x   | float  | 0.5            | Origen X para transformaciones          |
+| origen_y   | float  | 0.5            | Origen Y para transformaciones          |
+| opacidad   | float  | 1              | Nivel de opacidad (0-1)                 |
+| escala     | float  | 1              | Factor de escala                        |
+| angulo     | float  | 0              | Ángulo de rotación en grados            |
 
 **Ejemplo de uso:**
 ```json
@@ -141,22 +141,22 @@ Exporta información de marcadores extras para procesamiento posterior o documen
 **Nota:** Solo funciona si hay marcadores con prefijos especiales en la escena
 
 **Tipos de prefijos para marcadores:**
-| Prefijo | Tipo | Ejemplo |
-|---------|------|---------|
-| >T | Tarjeta/Title | >T Créditos |
-| >L | Link | >L www.ejemplo.com |
-| >V | Video | >V Tutorial Completo |
-| >A | Ads/Publicidad | >A Publicidad Sponsors |
-| >C | Créditos | >C Música por: Artista |
-| >P | Pantalla Final | >P Suscribete ahora |
-| >E | Recursos | >E Imágenes: Unsplash |
+| Prefijo | Tipo           | Ejemplo                |
+| ------- | -------------- | ---------------------- |
+| >T      | Tarjeta/Title  | >T Créditos            |
+| >L      | Link           | >L www.ejemplo.com     |
+| >V      | Video          | >V Tutorial Completo   |
+| >A      | Ads/Publicidad | >A Publicidad Sponsors |
+| >C      | Créditos       | >C Música por: Artista |
+| >P      | Pantalla Final | >P Suscribete ahora    |
+| >E      | Recursos       | >E Imágenes: Unsplash  |
 
 ### 10. **Subtítulos**
 Gestiona y procesa archivos de subtítulos sincronizados con el video.
 
 **Ubicación:** Panel ChepeCarlos
 
-**Archivo de configuración:** `~/.config/data/blender_subtitulo.json`
+**Archivo de configuración:** `~/.config/pluginBlenderChepeCarlos/data/blender_subtitulo.json`
 
 **Características:**
 - Carga automática de archivos .srt
@@ -212,7 +212,7 @@ Calcula las palabras por minuto de un script o narración para verificar tiempos
 
 #### Insertar Clips
 1. Coloca el cursor en el timeline donde quieres insertar el clip
-2. Configura el archivo en `data/insertar.json` con la ruta absoluta del archivo
+2. Configura el archivo en `~/.config/pluginBlenderChepeCarlos/data/insertar.json` con la ruta absoluta del archivo
 3. Haz clic en "Insertar"
 4. El clip se agregará en la posición del cursor
 
@@ -244,11 +244,19 @@ Calcula las palabras por minuto de un script o narración para verificar tiempos
 
 ### Archivos de Configuración
 
-Los archivos de configuración se guardan localmente en el proyecto y en `~/.config/`:
+Los archivos de configuración se guardan en:
 
-**Archivos principales:**
+- `~/.config/pluginBlenderChepeCarlos/`
+
+Ruta base real usada por el plugin:
+
+- `~/.config/pluginBlenderChepeCarlos` (sin doble `.config`)
+
+**Archivos principales (dentro de `~/.config/pluginBlenderChepeCarlos/`):**
 - **`data/insertar.json`** - Configuración para insertar clips
 - **`data/blender_subtitulo.json`** - Configuración de subtítulos
+- **`data/blender_subtitulo_resaltado.json`** - Estilo de resaltado de palabras
+- **`data/blender_subtitulo_extra.json`** - Ajustes extra de subtítulos (fuente, espera, etc.)
 - **`data/blender.json`** - Configuración general del plugin
 
 ### Estructura de Directorios
@@ -338,10 +346,10 @@ Para asignar atajos personalizados:
 - Verifica que el archivo sea un formato soportado (MP4, PNG, WAV, etc.)
 
 ### El botón "Insertar" está deshabilitado
-**Causa:** No hay un archivo configurado en `data/insertar.json`
+**Causa:** No hay un archivo configurado en `~/.config/pluginBlenderChepeCarlos/data/insertar.json`
 
 **Solución:**
-1. Crea el archivo `data/insertar.json` en la carpeta del plugin
+1. Crea el archivo `~/.config/pluginBlenderChepeCarlos/data/insertar.json`
 2. Agrega la configuración con la ruta del archivo
 3. Recarga el plugin
 
