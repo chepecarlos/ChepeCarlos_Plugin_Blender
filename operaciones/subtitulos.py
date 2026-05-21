@@ -205,7 +205,8 @@ class subtitulo(bpy.types.Operator):
             anchoFrase = self.calcularAnchoFrase(frase.capitalize(), idFuente, tamañoFuente)
 
             for propiedad, valor in propiedadesSubtítulos.items():
-                asignarDinámica(clipActual, propiedad, valor)
+                if not asignarDinámica(clipActual, propiedad, valor):
+                    self.report({"WARNING"}, f"Propiedad no aplicada: {propiedad} = {valor}")
 
             fraseAnterior = ""
             contadorInterno = 0
@@ -237,10 +238,12 @@ class subtitulo(bpy.types.Operator):
                     clipActual.font = bpy.data.fonts[idFuenteSelection]
 
                     for propiedad, valor in propiedadesSubtítulos.items():
-                        asignarDinámica(clipActual, propiedad, valor)
+                        if not asignarDinámica(clipActual, propiedad, valor):
+                            self.report({"WARNING"}, f"Propiedad no aplicada: {propiedad} = {valor}")
 
                     for propiedad, valor in propiedadesSubtítulosResaltado.items():
-                        asignarDinámica(clipActual, propiedad, valor)
+                        if not asignarDinámica(clipActual, propiedad, valor):
+                            self.report({"WARNING"}, f"Propiedad no aplicada: {propiedad} = {valor}")
 
                     if mensaje.startswith("."):
                         fraseAnterior = fraseAnterior.strip()
