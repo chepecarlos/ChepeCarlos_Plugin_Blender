@@ -6,7 +6,7 @@ import json
 import bpy
 import blf
 
-from .FuncionesArchivos import ObtenerArchivo
+from .FuncionesArchivos import ObtenerArchivo, ObtenerFolderConfig
 from .funcionesExtras import asignarDinámica, cargarFuente
 from .extras import mostrarMensajeBox
 
@@ -60,25 +60,29 @@ class subtitulo(bpy.types.Operator):
             if Titulo.startswith(prefijo) and colección_secuencias is not None:
                 colección_secuencias.remove(secuencia)
 
+        folderConfig = ObtenerFolderConfig()
         archivoData = "data/blender_subtitulo.json"
         propiedadesSubtítulos = ObtenerArchivo(archivoData)
         if propiedadesSubtítulos is None:
-            self.report({"INFO"}, f"No existe el archivo {archivoData}")
-            mostrarMensajeBox("No existe el archivo {archivoData}", title="Error", icon="ERROR")
+            rutaCompleta = os.path.join(folderConfig, archivoData)
+            self.report({"INFO"}, f"No existe el archivo {rutaCompleta}")
+            mostrarMensajeBox(f"No existe el archivo {rutaCompleta}", title="Error", icon="ERROR")
             return {"FINISHED"}
 
         archivoDataResaltado = "data/blender_subtitulo_resaltado.json"
         propiedadesSubtítulosResaltado = ObtenerArchivo(archivoDataResaltado)
         if propiedadesSubtítulosResaltado is None:
-            self.report({"INFO"}, f"No existe el archivo {archivoDataResaltado}")
-            mostrarMensajeBox("No existe el archivo {archivoDataResaltado}", title="Error", icon="ERROR")
+            rutaCompleta = os.path.join(folderConfig, archivoDataResaltado)
+            self.report({"INFO"}, f"No existe el archivo {rutaCompleta}")
+            mostrarMensajeBox(f"No existe el archivo {rutaCompleta}", title="Error", icon="ERROR")
             return {"FINISHED"}
 
         archivoExtra = "data/blender_subtitulo_extra.json"
         propiedadesSubtítulosExtra = ObtenerArchivo(archivoExtra)
         if propiedadesSubtítulosExtra is None:
-            self.report({"INFO"}, f"No existe el archivo {archivoExtra}")
-            mostrarMensajeBox(f"No existe el archivo {archivoExtra}", title="Error", icon="ERROR")
+            rutaCompleta = os.path.join(folderConfig, archivoExtra)
+            self.report({"INFO"}, f"No existe el archivo {rutaCompleta}")
+            mostrarMensajeBox(f"No existe el archivo {rutaCompleta}", title="Error", icon="ERROR")
             return {"FINISHED"}
 
         urlFuente = propiedadesSubtítulosExtra.get("fuente")
