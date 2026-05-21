@@ -109,7 +109,12 @@ class subtitulo(bpy.types.Operator):
         urlFuente = propiedadesSubtítulosExtra.get("fuente")
         archivoFuente = os.path.basename(urlFuente)
 
-        idFuenteSelection, idFuente = cargarFuente(urlFuente)
+        try:
+            idFuenteSelection, idFuente = cargarFuente(urlFuente)
+        except FileNotFoundError:
+            mostrarMensajeBox(f"No se encontró la fuente:\n{urlFuente}", title="Error de Fuente", icon="ERROR")
+            self.report({"ERROR"}, f"Fuente no encontrada: {urlFuente}")
+            return {"FINISHED"}
 
         idFuente = blf.load(urlFuente)
         self.report({"INFO"}, f"Fuente seleccionada: {archivoFuente}:{idFuente} URL: {urlFuente}")

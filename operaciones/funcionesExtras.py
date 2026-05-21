@@ -66,6 +66,8 @@ def cargarFuente(archivoFuente: str) -> tuple:
         idFuenteSelection += 1
 
     if not fuenteCargada:
+        if not os.path.exists(archivoFuente):
+            raise FileNotFoundError(f"No se encontró el archivo de fuente: {archivoFuente}")
         print("No se encontró la fuente, cargando...")
         bpy.data.fonts.load(archivoFuente)
         bpy.ops.file.make_paths_relative()
