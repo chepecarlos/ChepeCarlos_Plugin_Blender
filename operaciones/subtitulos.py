@@ -60,6 +60,9 @@ class subtitulo(bpy.types.Operator):
             if Titulo.startswith(prefijo) and colección_secuencias is not None:
                 colección_secuencias.remove(secuencia)
 
+        folder = os.path.dirname(bpy.data.filepath)
+        nombreArchivo = os.path.splitext(os.path.basename(bpy.data.filepath))[0]
+
         folderConfig = ObtenerFolderConfig()
         archivoData = "data/blender_subtitulo.json"
         propiedadesSubtítulos = ObtenerArchivo(archivoData)
@@ -69,6 +72,12 @@ class subtitulo(bpy.types.Operator):
             mostrarMensajeBox(f"No existe el archivo {rutaCompleta}", title="Error", icon="ERROR")
             return {"FINISHED"}
 
+        archivoProyecto = os.path.join(folder, "blender_subtitulo.json")
+        if os.path.exists(archivoProyecto):
+            with open(archivoProyecto) as f:
+                propiedadesSubtítulos.update(json.load(f))
+            self.report({"INFO"}, f"Config proyecto aplicada: {archivoProyecto}")
+
         archivoDataResaltado = "data/blender_subtitulo_resaltado.json"
         propiedadesSubtítulosResaltado = ObtenerArchivo(archivoDataResaltado)
         if propiedadesSubtítulosResaltado is None:
@@ -77,6 +86,12 @@ class subtitulo(bpy.types.Operator):
             mostrarMensajeBox(f"No existe el archivo {rutaCompleta}", title="Error", icon="ERROR")
             return {"FINISHED"}
 
+        archivoResaltadoProyecto = os.path.join(folder, "blender_subtitulo_resaltado.json")
+        if os.path.exists(archivoResaltadoProyecto):
+            with open(archivoResaltadoProyecto) as f:
+                propiedadesSubtítulosResaltado.update(json.load(f))
+            self.report({"INFO"}, f"Config resaltado proyecto aplicada: {archivoResaltadoProyecto}")
+
         archivoExtra = "data/blender_subtitulo_extra.json"
         propiedadesSubtítulosExtra = ObtenerArchivo(archivoExtra)
         if propiedadesSubtítulosExtra is None:
@@ -84,6 +99,12 @@ class subtitulo(bpy.types.Operator):
             self.report({"INFO"}, f"No existe el archivo {rutaCompleta}")
             mostrarMensajeBox(f"No existe el archivo {rutaCompleta}", title="Error", icon="ERROR")
             return {"FINISHED"}
+
+        archivoExtraProyecto = os.path.join(folder, "blender_subtitulo_extra.json")
+        if os.path.exists(archivoExtraProyecto):
+            with open(archivoExtraProyecto) as f:
+                propiedadesSubtítulosExtra.update(json.load(f))
+            self.report({"INFO"}, f"Config extra proyecto aplicada: {archivoExtraProyecto}")
 
         urlFuente = propiedadesSubtítulosExtra.get("fuente")
         archivoFuente = os.path.basename(urlFuente)
@@ -94,9 +115,6 @@ class subtitulo(bpy.types.Operator):
         self.report({"INFO"}, f"Fuente seleccionada: {archivoFuente}:{idFuente} URL: {urlFuente}")
 
         self.report({"INFO"}, f"Propiedades subtitulo {propiedadesSubtítulos}")
-
-        folder = os.path.dirname(bpy.data.filepath)
-        nombreArchivo = os.path.splitext(os.path.basename(bpy.data.filepath))[0]
         folderSubtitulos = f"{folder}/subtitulo_{nombreArchivo}"
         archivoSubtitulo = f"{folderSubtitulos}/out.json"
 
