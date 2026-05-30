@@ -25,9 +25,18 @@ class superindice(bpy.types.Operator):
         indices = context.scene.timeline_markers
         scene = context.scene
         seq = scene.sequence_editor
-        secuencias = seq.sequences_all
         render = context.scene.render
         framerate = render.fps / render.fps_base
+
+        if hasattr(seq, "strips_all"):
+            secuencias = list(seq.strips_all)
+            colección_secuencias = seq.strips
+        elif hasattr(seq, "sequences_all"):
+            secuencias = list(seq.sequences_all)
+            colección_secuencias = seq.sequences
+        else:
+            secuencias = []
+            colección_secuencias = None
 
         if indices is None:
             return {"CANCELLED"}
@@ -58,10 +67,9 @@ class superindice(bpy.types.Operator):
 
         for secuencia in secuencias:
             Titulo = secuencia.name
-            if Titulo.startswith(prefijo):
+            if Titulo.startswith(prefijo) and colección_secuencias is not None:
                 self.report({"INFO"}, f"borrar[{Titulo}]")
-
-                seq.sequences.remove(secuencia)
+                colección_secuencias.remove(secuencia)
 
         duraciónIndice = int(dataIndiceExtra.get("duracion", 5) * framerate)
         canal = int(dataIndiceExtra.get("canal", 8))
@@ -70,14 +78,29 @@ class superindice(bpy.types.Operator):
             Titulo = indice.name
             if not Titulo.startswith(">"):
                 frame = indice.frame
-                bpy.ops.sequencer.effect_strip_add(type="TEXT", frame_start=frame, frame_end=int(frame + duraciónIndice), channel=canal)
-                clipActual = (context.selected_strips)[0]
+                frameInicio = int(frame)
+                frameFin = int(frame + duraciónIndice)
+                duracion = max(1, frameFin - frameInicio)
+
+                clipActual = self.agregarTexto(context, colección_secuencias, frameInicio, frameFin, duracion, canal)
+                if clipActual is None:
+                    self.report({"ERROR"}, f"No se pudo crear strip para: {Titulo}")
+                    continue
                 clipActual.name = f"{prefijo}{Titulo}"
                 clipActual.text = Titulo
 
                 if fuente is not None:
-                    idFuenteSelection, idFuente = cargarFuente(fuente)
-                    clipActual.font = bpy.data.fonts[idFuenteSelection]
+                    try:
+                        idFuenteSelection, idFuente = cargarFuente(fuente)
+                        clipActual.font = bpy.data.fonts[idFuenteSelection]
+                    except FileNotFoundError:
+                        mostrarMensajeBox(
+                            f"No se encontró la fuente:\n{fuente}\n\nRevisa 'fuente' en data/indice_extra.json",
+                            title="Error de Fuente",
+                            icon="ERROR",
+                        )
+                        self.report({"ERROR"}, f"Fuente no encontrada: {fuente}")
+                        return {"FINISHED"}
 
                 clipActual.color_tag = "COLOR_06"
 
@@ -89,6 +112,38 @@ class superindice(bpy.types.Operator):
                         if asignarDinámica(clipActual, propiedad, valor):
                             self.report({"INFO"}, f"Asignar[{propiedad}] {valor}")
 
-                bpy.ops.sequencer.fades_add(duration_seconds=tiempoDesaparecer, type=animaciónDesaparecer)
+                try:
+                    bpy.ops.sequencer.fades_add(duration_seconds=tiempoDesaparecer, type=animaciónDesaparecer)
+                except Exception as error:
+                    self.report({"WARNING"}, f"No se pudo agregar fade: {error}")
 
         return {"FINISHED"}
+
+    def agregarTexto(self, context, colección, frameInicio, frameFin, duracion, canal):
+        nombreTemporal = f"indice.tmp.{canal}.{frameInicio}"
+        try:
+            return colección.new_effect(
+                name=nombreTemporal,
+                type="TEXT",
+                channel=canal,
+                frame_start=frameInicio,
+                frame_end=frameFin,
+            )
+        except TypeError:
+            try:
+                return colección.new_effect(
+                    name=nombreTemporal,
+                    type="TEXT",
+                    channel=canal,
+                    frame_start=frameInicio,
+                    length=duracion,
+                )
+            except TypeError:
+                try:
+                    return colección.new_effect(nombreTemporal, "TEXT", canal, frameInicio, frameFin)
+                except Exception as error:
+                    self.report({"ERROR"}, f"Error creando strip: {error}")
+                    return None
+        except Exception as error:
+            self.report({"ERROR"}, f"Error creando strip: {error}")
+            return None

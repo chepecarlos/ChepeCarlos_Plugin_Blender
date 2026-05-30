@@ -1,4 +1,4 @@
-BLENDER ?= /home/chepecarlos/5.Programas/1.Edicion/1.Blender/blender-5.1.1-linux-x64/blender
+BLENDER ?= /home/chepecarlos/5.Programas/1.Edicion/1.Blender/blender-5.1.2-linux-x64/blender
 PROJECT_ROOT ?= /home/chepecarlos/5.Programas/1.Edicion
 ADDON_MODULE ?= ChepeCarlos_Plugin_Blender
 DIST_DIR ?= dist
@@ -6,7 +6,7 @@ BLENDER_CONFIG_VERSION ?= 5.1
 ADDONS_DIR ?= $(HOME)/.config/blender/$(BLENDER_CONFIG_VERSION)/scripts/addons
 ZIP_NAME ?= $(ADDON_MODULE)-$(shell date +%Y%m%d-%H%M%S).zip
 
-.PHONY: blenderaddon blenderaddon-dev blenderaddon-bg blenderaddon-check zip zlip install-local
+.PHONY: blenderaddon blenderaddon-dev blenderaddon-bg blenderaddon-check blenderaddon-reload zip zlip install-local
 
 blenderaddon:
 	$(BLENDER) --factory-startup --python-expr "import sys; sys.path.insert(0, '$(PROJECT_ROOT)'); import $(ADDON_MODULE) as addon; addon.register()"
@@ -19,6 +19,9 @@ blenderaddon-bg:
 
 blenderaddon-check:
 	$(BLENDER) --background --factory-startup --python-expr "import bpy; print(bpy.app.version_string)"
+
+blenderaddon-reload:
+	$(BLENDER) --background --factory-startup --python-expr "import sys, importlib; sys.path.insert(0, '$(PROJECT_ROOT)'); import $(ADDON_MODULE) as addon; addon.register(); [sys.modules.pop(k) for k in list(sys.modules) if '$(ADDON_MODULE)' in k]; import $(ADDON_MODULE) as addon; importlib.reload(addon); addon.unregister(); addon.register(); print('ADDON_RELOAD_OK')"
 
 zip:
 	mkdir -p "$(DIST_DIR)/.zip_tmp/$(ADDON_MODULE)"
