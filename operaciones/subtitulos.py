@@ -170,7 +170,8 @@ class subtitulo(bpy.types.Operator):
                     tiempoInicioPalabra = palabra.get("start", 0)
                     if tiempoInicioPalabra - tiempoFinPalabraAnterior >= esperaCorte:
                         self.report({"INFO"}, f"Corte: {mensaje.strip()} {tiempoInicioPalabra} - {tiempoFinPalabraAnterior}: {tiempoInicioPalabra - tiempoFinPalabraAnterior}")
-                        lineasPalabras.append(palabrasActuales)
+                        if palabrasActuales:
+                            lineasPalabras.append(palabrasActuales)
                         palabrasActuales = list()
                         palabrasActuales.append(palabra)
                         palabraAnterior = palabra
@@ -178,7 +179,8 @@ class subtitulo(bpy.types.Operator):
                         continue
 
                 if anchoFraseActual > anchoPantalla * 0.9:
-                    lineasPalabras.append(palabrasActuales)
+                    if palabrasActuales:
+                        lineasPalabras.append(palabrasActuales)
                     palabrasActuales = list()
                     palabrasActuales.append(palabra)
                     palabraAnterior = palabra
