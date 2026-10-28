@@ -11,6 +11,44 @@ from .funcionesExtras import asignarDinámica, cargarFuente
 from .extras import mostrarMensajeBox
 
 
+def _obtenerSecuencias(seq):
+    if hasattr(seq, "sequences_all"):
+        return list(seq.sequences_all), seq.sequences
+    elif hasattr(seq, "strips_all"):
+        return list(seq.strips_all), seq.strips
+    return list(getattr(seq, "sequences", [])), getattr(seq, "sequences", None)
+
+
+def quitarSubtitulos(context, prefijo="subtitulo."):
+    scene = context.scene
+    seq = scene.sequence_editor
+    if seq is None:
+        return 0
+
+    secuencias, colección_secuencias = _obtenerSecuencias(seq)
+    if colección_secuencias is None:
+        return 0
+
+    eliminadas = 0
+    for secuencia in secuencias:
+        if secuencia.name.startswith(prefijo):
+            colección_secuencias.remove(secuencia)
+            eliminadas += 1
+    return eliminadas
+
+
+class quitarSubtitulo(bpy.types.Operator):
+    bl_idname = "scene.quitarsubtitulo"
+    bl_label = "Quitar Subtitulo"
+    bl_description = "Elimina los strips de subtítulos insertados"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        eliminadas = quitarSubtitulos(context)
+        self.report({"INFO"}, f"Subtítulos eliminados: {eliminadas}")
+        return {"FINISHED"}
+
+
 class subtitulo(bpy.types.Operator):
     bl_idname = "scene.subtitulo"
     bl_label = "Subtitulo"
@@ -38,15 +76,6 @@ class subtitulo(bpy.types.Operator):
         if seq is None:
             seq = scene.sequence_editor_create()
 
-        if hasattr(seq, "sequences_all"):
-            secuencias = list(seq.sequences_all)
-            colección_secuencias = seq.sequences
-        elif hasattr(seq, "strips_all"):
-            secuencias = list(seq.strips_all)
-            colección_secuencias = seq.strips
-        else:
-            secuencias = list(getattr(seq, "sequences", []))
-            colección_secuencias = getattr(seq, "sequences", None)
         render = context.scene.render
         frameFinal = context.scene.frame_end
         frameInicio = context.scene.frame_start
@@ -55,10 +84,7 @@ class subtitulo(bpy.types.Operator):
 
         # Quitar subtítulos anteriores
         prefijo = "subtitulo."
-        for secuencia in secuencias:
-            Titulo = secuencia.name
-            if Titulo.startswith(prefijo) and colección_secuencias is not None:
-                colección_secuencias.remove(secuencia)
+        quitarSubtitulos(context, prefijo)
 
         folder = os.path.dirname(bpy.data.filepath)
         nombreArchivo = os.path.splitext(os.path.basename(bpy.data.filepath))[0]

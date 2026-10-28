@@ -9,7 +9,7 @@ from .operaciones.indice import superindice
 from .operaciones.macros import add_hotkey, remove_hotkey
 from .operaciones.mover import moverclip
 from .operaciones.sobreponeraudio import sobreponeraudio
-from .operaciones.subtitulos import subtitulo
+from .operaciones.subtitulos import subtitulo, quitarSubtitulo
 from .operaciones.superInsertar import superInsertar
 from .operaciones.zoon import superzoon
 from .operaciones.autoanotar import autoanotar
@@ -41,6 +41,7 @@ classes = [
     exportarindice,
     hueva,
     subtitulo,
+    quitarSubtitulo,
     autoanotar,
     superanimar,
     palabraPorMinuto,

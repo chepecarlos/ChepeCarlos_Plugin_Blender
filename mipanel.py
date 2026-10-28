@@ -21,6 +21,7 @@ class mi_PT_panel(bpy.types.Panel):
         row = layout.row()
         row.label(text="Subtítulos")
         ops = row.operator("scene.subtitulo", text="Agregar")
+        ops = row.operator("scene.quitarsubtitulo", text="Quitar")
 
         row = layout.row()
         row.label(text="Palabra por Minuto")
